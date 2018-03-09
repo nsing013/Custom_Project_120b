@@ -1,0 +1,55 @@
+#include <avr/io.h>
+#include "ledmatrix88.h"
+#include "ledmatrix88.c"
+
+enum Matrix_States {Matrix_Start, Matrix_wait, Matrix_image, Matrix_user_input, Matrix_compare} Matrix_State;
+
+void LED_matrix_tick()
+{
+	int score = 0; //this variable will be displayed on the LCD Screen
+	switch(Matrix_State) //start transitions that take place between the states
+	{
+		case Matrix_Start:
+			break;
+		
+		case Matrix_wait:
+			//checks level
+			break;
+
+		case Matrix_image:
+			//display image depending on the level for 10 seconds 
+			break;
+		
+		case Matrix_user_input:
+			//take user input for 30 seconds
+			//store in a matrix (2d array probably)
+			break;
+		
+		case Matrix_compare:
+			//compare original image with the user imput image and if matches perfectly give +20 points.
+			//if(match) then score += 20;
+			break;
+			
+		default:
+			LCD_State = LCD_Start;
+			break;
+	} //end of the transitions
+	
+	switch(Matrix_State) //state actions for what happens for the buttons below this
+	{
+		case Matrix_Start:
+			break;
+		case Matrix_wait:
+			break;
+		case Matrix_image:
+			break;
+		case Matrix_user_input:
+			break;
+		case Matrix_compare:
+			break;
+		default:
+			break;
+	}// end of the state actions
+	
+	PORTC = score; //LCD print the score
+} 
