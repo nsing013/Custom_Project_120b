@@ -2,40 +2,49 @@
 #include "nokia5110.h"
 #include "nokia5110.c"
 
-enum Nokia_LCD_States {Nokia_LCD_Start, Nokia_LCD_wait, Nokia_LCD_levels} Nokia_LCD_State;
+int level = 0;
+int score = 0;
+short button;
 
+enum Nokia_LCD_States {Nokia_LCD_Start, Nokia_LCD_wait, Nokia_LCD_levels} Nokia_LCD_State;
 void nokia_LCD_tick() 
-{
-	int level = 0;
-	//button = ~PINA & 0x03;
-	switch(Nokia_LCD_State) //start transitions that take place between the states
+{													
+	button = ~PINB & 0x20;											//checking for button press to move on to levels button press 
+	switch(Nokia_LCD_State)	//transitions
 	{	
-		case Nokia_LCD_Start:
+		case Nokia_LCD_Start:										//starting stuff
 			nokia_lcd_init();
 			nokia_lcd_power(1);
 			nokia_lcd_set_cursor(0, 0);
-			nokia_lcd_write_string("MEMORY", 2); //only want this to display for 5 seconds
+			nokia_lcd_write_string("MEMORY", 2);
 			nokia_lcd_render();
 			nokia_lcd_set_cursor(0, 18);
-			nokia_lcd_write_string("Do you want to continue?", 1); //want this to display until user gives input
+			nokia_lcd_write_string("Press button to continue.", 1);	//want this to display until user gives input
 			nokia_lcd_render();
-			//Nokia_LCD_State = Nokia_LCD_wait;
+			Nokia_LCD_State = Nokia_LCD_wait;						//go to the wait state and wait for input from button
 			break;
 		
 		case Nokia_LCD_wait:
-			//in the wait state if the user presses the joystick continue to level 1
-			//if (button == 0x01) //joystick input
+			if(button)	//in the wait state if the user presses the joystick continue to level 1
 			{
-				level++; //want level to be 1 the first time and increment every time it comes to wait state
+				nokia_lcd_clear();	//clear the screen
 				Nokia_LCD_State = Nokia_LCD_levels;
 			}
-			//else
+			else
 			{
 				Nokia_LCD_State =  Nokia_LCD_wait; //loop in wait state until user presses something
 			}
 			break;
 
 		case Nokia_LCD_levels:
+			level++;			//want level to be 1 the first time and increment every time it comes to level state
+			nokia_lcd_set_cursor(0, 0);
+			nokia_lcd_write_string("Level: ", 1); //display the level number!!! HELP
+			nokia_lcd_render();
+			nokia_lcd_write_string("Score: ", 1); //display the score!!! HELP
+			nokia_lcd_render();
+			//display the level image on the matrix for 10 seconds! HELP!
+			
 			//each level has a different picture which will display on the LED Matrix. 
 			// so depending on the level send output to the matrix state machine.
 			break;
@@ -55,7 +64,7 @@ void nokia_LCD_tick()
 			break;
 		default:
 			break;
-	}// end of the state actions
+	}
 	
 	//PORTC = output;
 } //end of Button LA function

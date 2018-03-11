@@ -20,44 +20,63 @@ unsigned short Read_ADC(uint8_t ch)
 	return ADC;
 }
 
-enum Joystick_States {Joystick_Start, Joystick_pressed, Joystick_navigate} Joystick_State;
+//PA[0] connected to potentiometer giving input //LEFT and RIGHT for joystick right now
+//PA[1] want to connect to  y axis
+unsigned short valueX, valueY;
+unsigned short idle = 543;
+unsigned short low_threshold = 510;		//250;
+unsigned short high_threshold = 580;	//820;
 
-void Joystick_tick()
+enum Joystick_States {Joystick_navigate};
+
+void Joystick_tick(int state) 
 {
-	switch(Joystick_State) //start transitions
+	short button = ~PINB & 0x20;							//button press also part of the joystick
+	valueX = Read_ADC(1);									//getting x and y axis from joystick
+	valueY = Read_ADC(0);
+	
+	switch(state) //start transitions
 	{
-		case Joystick_Start:
-			//if(joystick is pressed) go to state Joystick_pressed  //NO PRESS ON JOYSTICK use regular button
-			//if(joystick is moved) go to state navigate.... well im not sure about this one
-			break;
-		
-		case Joystick_pressed:
-			//illuminate the led that cursor was on when the joystick was pressed //USE A BUTTON INSTEAD THERE IS NO BUTTON ON JOYSTICK DUMBB!
-			break;
-
 		case Joystick_navigate:
-			//if(right, A0 value is greater than 5) increment x coordinate
-			//if(left, A0 value is smaller than 5) decrement x coordinate
-			//if(up,  A1 value is greater than 5) increment y coordinate
-			//if(down, A1 value is greater than 5) decrement y coordinate
+			if(valueX < low_threshold)	{					//joystick is in the left position
+				LED_Matrix_Tick(LED_Matrix_move_left);		//decrement x value on cursor
+			}
+			if(valueX > high_threshold)	{					//joystick is in the right position
+				LED_Matrix_Tick(LED_Matrix_move_right);		//increment x value on cursor
+			}
+			if(valueY < low_threshold)	{					//joystick is in the left position
+				LED_Matrix_Tick(LED_Matrix_move_up);		//increment x value on cursor, my joystick is sideways on the board so it has to be done this way
+			}
+			if(valueY > high_threshold)	{					//joystick is in the right position
+				LED_Matrix_Tick(LED_Matrix_move_down);		//decrement x value on cursor
+			}
+			
+			if(button)										// USE A BUTTON INSTEAD THERE IS NO BUTTON ON JOYSTICK DUMBB!
+			{
+				/* testing it on the nokia screen*/
+				/*
+				nokia_lcd_init();
+				nokia_lcd_power(1);
+				nokia_lcd_set_cursor(0, 0);
+				nokia_lcd_write_string("Button is pressed!", 1);
+				nokia_lcd_render();
+				*/
+				LED_Matrix_Tick(LED_Matrix_update_user_matrix); //update the user-input matrix 
+			}
+			state = Joystick_navigate;							//always stay in the navigate state
 			break;
 		
 		default:
-			Joystick_State = Joystick_Start;
+			state = Joystick_navigate;
 			break;
-	} //end of the transitions
+	}
 	
-	switch(Joystick_State) //state actions for what happens for the buttons below this
+	switch(state) //state actions
 	{
-		case Joystick_Start:
-			break;
-		case Joystick_pressed:
-			break;
 		case Joystick_navigate:
 			break;
 		default:
 			break;
-	}// end of the state actions
-	
-	//PORTC = output;
-} //end of Button LA function
+	}
+	return state;
+}
