@@ -25,13 +25,12 @@ int main(void)
 	char snum[10]; //Char array holds ADC Value to display on LCD
 	
 	TimerSet(10); //30);
-	TimerOn();
+	TimerOn();	
 	
 	while(1)
 	{
 		//LED_Matrix_Tick(LED_Matrix_levels);
-		
-		//nokia_LCD_tick();	
+		nokia_LCD_tick(Nokia_LCD_Start);
 		while(!TimerFlag)
 			LED_Matrix_Tick(LED_Matrix_cursor);				//LED MATRIX STATE MACHINE
 			

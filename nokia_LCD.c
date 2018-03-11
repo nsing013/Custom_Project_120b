@@ -6,7 +6,7 @@ int level = 0;
 int score = 0;
 short button;
 
-enum Nokia_LCD_States {Nokia_LCD_Start, Nokia_LCD_wait, Nokia_LCD_levels} Nokia_LCD_State;
+enum Nokia_LCD_States {Nokia_LCD_Start, Nokia_LCD_wait_before_level, Nokia_LCD_levels, Nokia_LCD_Continue} Nokia_LCD_State;
 void nokia_LCD_tick() 
 {													
 	button = ~PINB & 0x20;											//checking for button press to move on to levels button press 
@@ -21,10 +21,10 @@ void nokia_LCD_tick()
 			nokia_lcd_set_cursor(0, 18);
 			nokia_lcd_write_string("Press button to continue.", 1);	//want this to display until user gives input
 			nokia_lcd_render();
-			Nokia_LCD_State = Nokia_LCD_wait;						//go to the wait state and wait for input from button
+			Nokia_LCD_State = Nokia_LCD_wait_before_level;						//go to the wait state and wait for input from button
 			break;
 		
-		case Nokia_LCD_wait:
+		case Nokia_LCD_wait_before_level:
 			if(button)	//in the wait state if the user presses the joystick continue to level 1
 			{
 				nokia_lcd_clear();	//clear the screen
@@ -32,7 +32,7 @@ void nokia_LCD_tick()
 			}
 			else
 			{
-				Nokia_LCD_State =  Nokia_LCD_wait; //loop in wait state until user presses something
+				Nokia_LCD_State =  Nokia_LCD_wait_before_level; //loop in wait state until user presses something
 			}
 			break;
 
@@ -47,8 +47,10 @@ void nokia_LCD_tick()
 			
 			//each level has a different picture which will display on the LED Matrix. 
 			// so depending on the level send output to the matrix state machine.
+			Nokia_LCD_State =  Nokia_LCD_Continue;
 			break;
-				
+		case Nokia_LCD_Continue:
+			break;
 		default:
 			Nokia_LCD_State = Nokia_LCD_Start;
 			break;
@@ -58,9 +60,11 @@ void nokia_LCD_tick()
 	{
 		case Nokia_LCD_Start:
 			break;
-		case Nokia_LCD_wait:
+		case Nokia_LCD_wait_before_level:
 			break;
 		case Nokia_LCD_levels:
+			break;
+		case Nokia_LCD_Continue:
 			break;
 		default:
 			break;
