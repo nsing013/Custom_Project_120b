@@ -6,13 +6,13 @@
 
 #include <avr/io.h>
 #include "timer.h"
-#include "nokia_LCD.c"
 #include "LED_Matrix.c"
 #include "joystick.c"
+#include "nokia_LCD.c"
+
 
 int main(void)
 {
-
 	//PA[0] connected to potentiometer giving input //LEFT and RIGHT for joystick right now
 	//PA[1] want to connect to  y axis
 	
@@ -22,19 +22,19 @@ int main(void)
 	DDRD = 0xFF; PORTD = 0x00; //Row # 
 
 	ADC_init();
-	char snum[10]; //Char array holds ADC Value to display on LCD
+	//char snum[10]; //Char array holds ADC Value to display on LCD
 	
-	TimerSet(10); //30);
+	TimerSet(10); //i'm using 10 here because it easily takes the input from the joystick even if someone decides to just flick it 
 	TimerOn();	
 	
 	while(1)
 	{
 		//LED_Matrix_Tick(LED_Matrix_levels);
-		nokia_LCD_tick(Nokia_LCD_Start);
-		while(!TimerFlag)
-			LED_Matrix_Tick(LED_Matrix_cursor);				//LED MATRIX STATE MACHINE
+		nokia_LCD_tick();
+		while(!TimerFlag);
+			//LED_Matrix_Tick(LED_Matrix_cursor);				//LED MATRIX STATE MACHINE
 			
-		Joystick_tick(Joystick_navigate);
+		//Joystick_tick(Joystick_navigate);
 		TimerFlag = 0;	
 	}
 }

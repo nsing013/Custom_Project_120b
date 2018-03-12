@@ -12,7 +12,8 @@ main.d main.o: .././main.c \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h \
  .././timer.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h \
- .././nokia_LCD.c ../nokia_LCD/avr-nokia5110-master/nokia5110.h \
+ .././LED_Matrix.c .././joystick.c .././nokia_LCD.c \
+ ../nokia_LCD/avr-nokia5110-master/nokia5110.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\pgmspace.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stddef.h \
  ../nokia_LCD/avr-nokia5110-master/nokia5110.c \
@@ -20,8 +21,7 @@ main.d main.o: .././main.c \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay_basic.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h \
- ../nokia_LCD/avr-nokia5110-master/nokia5110_chars.h .././LED_Matrix.c \
- .././joystick.c
+ ../nokia_LCD/avr-nokia5110-master/nokia5110_chars.h
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -49,6 +49,10 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h:
 
+.././LED_Matrix.c:
+
+.././joystick.c:
+
 .././nokia_LCD.c:
 
 ../nokia_LCD/avr-nokia5110-master/nokia5110.h:
@@ -68,7 +72,3 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h:
 
 ../nokia_LCD/avr-nokia5110-master/nokia5110_chars.h:
-
-.././LED_Matrix.c:
-
-.././joystick.c:

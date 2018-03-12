@@ -1,3 +1,5 @@
+#ifndef __JOYSTICK_c__
+#define __JOYSTICK_c__
 
 // Using ADC to get the x and y axis of the JOYSTICK
 void ADC_init() 
@@ -53,6 +55,7 @@ void Joystick_tick(int state)
 			
 			if(button)										// USE A BUTTON INSTEAD THERE IS NO BUTTON ON JOYSTICK DUMBB!
 			{
+				LED_Matrix_Tick(LED_Matrix_update_user_matrix); //update the user-input matrix 
 				/* testing it on the nokia screen*/
 				/*
 				nokia_lcd_init();
@@ -61,7 +64,6 @@ void Joystick_tick(int state)
 				nokia_lcd_write_string("Button is pressed!", 1);
 				nokia_lcd_render();
 				*/
-				LED_Matrix_Tick(LED_Matrix_update_user_matrix); //update the user-input matrix 
 			}
 			state = Joystick_navigate;							//always stay in the navigate state
 			break;
@@ -78,5 +80,6 @@ void Joystick_tick(int state)
 		default:
 			break;
 	}
-	return state;
 }
+
+#endif

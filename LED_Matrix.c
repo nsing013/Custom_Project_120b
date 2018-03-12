@@ -1,3 +1,5 @@
+#ifndef __LED_MATRIX_c__
+#define __LED_MATRIX_c__
 
 //LEVEL 1
 /*
@@ -10,7 +12,7 @@
 11101111
 11111111
 */
-unsigned char y1 [] = {0xFF, 0xE7, 0xE7, 0xFF, 0xE7, 0xF7, 0xEF, 0xFF};			//level 1 semicolon
+unsigned char y_1 [] = {0xFF, 0xE7, 0xE7, 0xFF, 0xE7, 0xF7, 0xEF, 0xFF};			//level 1 semicolon
 
 //LEVEL 2
 /*
@@ -23,7 +25,7 @@ unsigned char y1 [] = {0xFF, 0xE7, 0xE7, 0xFF, 0xE7, 0xF7, 0xEF, 0xFF};			//leve
 11011011
 11100111
 */
-unsigned char y2 [] = {0xE7, 0xDB, 0xBD, 0x7E, 0x7E, 0xBD, 0xDB, 0xE7};			//level 2 diamond
+unsigned char y_2 [] = {0xE7, 0xDB, 0xBD, 0x7E, 0x7E, 0xBD, 0xDB, 0xE7};			//level 2 diamond
 	
 //LEVEL 3
 /*
@@ -36,7 +38,7 @@ unsigned char y2 [] = {0xE7, 0xDB, 0xBD, 0x7E, 0x7E, 0xBD, 0xDB, 0xE7};			//leve
 10111101
 11000011
 */
-unsigned char y3 [] = {0xC3, 0xBD, 0x5A, 0x7E, 0x5A, 0x66, 0xBD, 0xC3};			//level 3 smiley
+unsigned char y_3 [] = {0xC3, 0xBD, 0x5A, 0x7E, 0x5A, 0x66, 0xBD, 0xC3};			//level 3 smiley
 	
 //LEVEL 4
 /*
@@ -49,7 +51,7 @@ unsigned char y3 [] = {0xC3, 0xBD, 0x5A, 0x7E, 0x5A, 0x66, 0xBD, 0xC3};			//leve
 01010101
 10101010
 */
-unsigned char y4 [] = {0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA};			//level 4 Checkers
+unsigned char y_4 [] = {0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA};			//level 4 Checkers
 
 //LEVEL 5
 /*
@@ -62,8 +64,10 @@ unsigned char y4 [] = {0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA};			//leve
 01101111
 11111111
 */
-unsigned char y5 [] = {0xFF, 0xFF, 0x9F, 0x6D, 0x08, 0x6D, 0x6F, 0xFF};			//level 5 A+
+unsigned char y_5 [] = {0xFF, 0xFF, 0x9F, 0x6D, 0x08, 0x6D, 0x6F, 0xFF};			//level 5 A+
 	
+unsigned char* levels[] = {y_1, y_2, y_3, y_4, y_5};									// array of all the levels
+
 // CURSOR
 /*
 01111111
@@ -75,13 +79,15 @@ unsigned char y5 [] = {0xFF, 0xFF, 0x9F, 0x6D, 0x08, 0x6D, 0x6F, 0xFF};			//leve
 11111111
 11111111
 */
-
-unsigned char user_input [8] = {0x00};													// empty user input array, will hold positions user decides to light up
-unsigned char row, col;																	// row is the row number(the array), col is the bit in each row (the numbers in the array are 8 bits each) 
-unsigned char cursor_x = 0x80;															// this is the column where the cursor is 
-unsigned char cursor_y = 0x01;															// this is the row where the cursor is
-unsigned char user_row_val = 0x00;										
-int i = 0;
+short Matrix_counter;
+unsigned char user_input [8] = {0x00};									// empty user input array, will hold positions user decides to light up
+unsigned char row, col;													// row is the row number(the array), col is the bit in each row (the numbers in the array are 8 bits each) 
+unsigned char cursor_x = 0x80;											// this is the column where the cursor is 
+unsigned char cursor_y = 0x01;											// this is the row where the cursor is
+unsigned char user_row_val = 0x00;		
+unsigned char correct = 0x00;											//this variable works as a bool when comparing the user_input to the level array.  								
+char i = 0;
+extern char level; 
 
 enum LED_Matrix_States {LED_Matrix_Start, LED_Matrix_levels, LED_Matrix_cursor, LED_Matrix_move_right, LED_Matrix_move_left, LED_Matrix_move_up, LED_Matrix_move_down, LED_Matrix_update_user_matrix};
 int LED_Matrix_Tick(int state)
@@ -109,7 +115,7 @@ int LED_Matrix_Tick(int state)
 		case LED_Matrix_levels:				//don't screw with this
 			PORTC = 0xFF;					//resets PORTC every time so last row does not mess with output for new row
 			PORTD = 0x01 << i;				//increments to next row, shifting will send power to the next row with every loop
-			PORTC = y5[i];					//lights up the pattern for the given row
+			PORTC = levels[level - 1][i];
 			i++;
 			if(i==8) {i = 0;}				//if at the end of row, restart at the start of next row
 			break;
@@ -124,7 +130,7 @@ int LED_Matrix_Tick(int state)
 				PORTC = ~(user_input [i]);				//or else just show the pattern for that row
 			}	
 			i++;
-			if(i==8) {i = 0;}
+			if(i==8) {i = 0;} 
 			break;
 			
 		case LED_Matrix_move_right:		
@@ -166,3 +172,6 @@ int LED_Matrix_Tick(int state)
 	return state;
 };
 
+
+
+#endif
